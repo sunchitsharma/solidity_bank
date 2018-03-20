@@ -38,6 +38,18 @@ contract Bank{
         }
     }
     
+    // DELETE SINGLE ACCOUNT
+    function delete_account(uint account_no) returns(bool) {
+        uint arrayLength = acc_no.length;
+            for (uint i=0; i<arrayLength; i++) {
+                if(acc_no[i]==account_no){
+                    acc_no[i]=999;
+                    return true;
+                }
+            }
+            return false;
+    }
+    
     // CREATE JOINT ACCOUNT
     function create_joint_account(string name_1, string name_2, uint amount) returns(uint) {
         if(amount>=minimum_balance){
@@ -122,7 +134,5 @@ contract Bank{
             }
         }
     }
-        
-    
     
 }
