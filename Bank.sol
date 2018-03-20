@@ -135,62 +135,83 @@ contract Bank{
          
     // FUNDS TRANSFER -> CHANGED
         function transfer_funds(uint acc1, uint acc2, uint amount)returns (bool){
+            var found = 0;
             if(amount<=fund_transfer_limit){
-                uint rec = withdraw(acc1,amount);
-                if(rec==0){
+                 uint arrayLength = acc_no.length;
+                    for (uint i=0; i<arrayLength; i++) {
+                        if(acc_no[i]==acc2){
+                            found =1;
+                        }
+                    }
+                ///////////////////////
+                if(amount <=withdrawal_limit){
+                arrayLength = acc_no.length;
+                uint done = 0;
+                for ( i=0; i<arrayLength; i++) {
+                if(acc_no[i]==acc1 && (name1[i]==msg.sender || name2[i]==msg.sender)){
+                    done =bal[i]-amount;
+                    if(done>minimum_balance){
+                        done =1;
+                    }
+                    else{
+                        done=0;
+                    }
+                }
+            }
+           var rec= done;
+        }
+        else{
+            rec=0;
+        }
+                ///////////////////////
+                if(rec==0 || found ==0){
                     return false;
                 }
                 else{
-                        
-                    if(amount <= deposit_limit){
-                    uint arrayLength = acc_no.length;
-                    uint done = 0;
-                    for (uint i=0; i<arrayLength; i++) {
+                    
+                    arrayLength = acc_no.length;
+                    for ( i=0; i<arrayLength; i++) {
+                        if(acc_no[i]==acc1 && (name1[i]==msg.sender || name2[i]==msg.sender)){
+                            bal[i]=bal[i]-amount;
+                        }
+                    }
+                    for ( i=0; i<arrayLength; i++) {
                         if(acc_no[i]==acc2){
-                            done =bal[i]+amount;
                             bal[i]=bal[i]+amount;
                             return true;
                             }
                         }
                     }
-                    else{
-                        done = 0;
-                    }
-                    
-                    if(done==0){
-                        arrayLength = acc_no.length;
-                        for (i=0; i<arrayLength; i++) {
-                            if(acc_no[i]==acc1){
-                                bal[i]=bal[i]+amount;
-                                return true;
-                            }
-                        
-                        return false;
-                    }
-                    return true;
                 }
             }
-        }
-    }
+        
     
-    function create_fd(uint account_no) payable returns(uint){
+    
+    // DONE CREATE FD
+    function create_fd(uint account_no) payable returns(bool){
         
          uint arrayLength = acc_no.length;
             for (uint i=0; i<arrayLength; i++) {
                 if(acc_no[i]==account_no && (name1[i]==msg.sender || name2[i]==msg.sender)){
                     fd[i]=fd[i]+msg.value;
+                    return true;
                 }
             }
+            return false;
     }
     
-    function redeem_fd(uint account_no) payable returns(uint){
+    // DONE REDEEM FD
+    function redeem_fd(uint account_no) returns(uint){
         
          uint arrayLength = acc_no.length;
             for (uint i=0; i<arrayLength; i++) {
                 if(acc_no[i]==account_no && (name1[i]==msg.sender || name2[i]==msg.sender)){
-                    return fd[i];
+                    var a = fd[i];
+                    fd[i]=0;
+                    return a;
                 }
             }
+            return 0;
     }
     
     
