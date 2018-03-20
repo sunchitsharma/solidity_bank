@@ -25,11 +25,12 @@ contract Bank{
     
     // CREATE SINGLE ACCOUNT
     function create_account(string name, uint amount) returns(uint) {
-        if(amount>minimum_balance){
+        if(amount>=minimum_balance){
             name1.push(name);
             name2.push("NULL");
             acc_no.push(curr_acc_seq);
             curr_acc_seq=curr_acc_seq+1;
+            bal.push(amount);
             return curr_acc_seq-1; 
         }
         else{
@@ -60,7 +61,7 @@ contract Bank{
             for (uint i=0; i<arrayLength; i++) {
                 if(acc_no[i]==account_no){
                     done =bal[i]+amount;
-                    bal[i]+=amount;
+                    bal[i]=bal[i]+amount;
                 }
             }
             return done;
@@ -69,5 +70,41 @@ contract Bank{
             return 0;
         }
     }
+    
+    // FUND DEPOSIT 
+    function withdraw(uint account_no, uint amount)returns(uint){
+        if(amount <=withdrawal_limit){
+            uint arrayLength = acc_no.length;
+            uint done = 0;
+            for (uint i=0; i<arrayLength; i++) {
+                if(acc_no[i]==account_no){
+                    done =bal[i]-amount;
+                    if(done>minimum_balance){
+                        bal[i]=bal[i]-amount;
+                    }
+                    else{
+                        done=0;
+                    }
+                }
+            }
+            return done;
+        }
+        else{
+            return 0;
+        }
+    }
+    
+    // SEE BALANCE
+    function check_bal(uint account_no) returns(uint){
+          uint arrayLength = acc_no.length;
+          for (uint i=0; i<arrayLength; i++) {
+            if(acc_no[i]==account_no)
+                return bal[i];
+            }
+            return 0;
+              
+         }
+        
+    
     
 }
