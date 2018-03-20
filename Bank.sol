@@ -104,6 +104,24 @@ contract Bank{
             return 0;
               
          }
+         
+    // FUNDS TRANSFER
+    function transfer_funds(uint acc1, uint acc2, uint amount)returns (bool){
+        if(amount<=fund_transfer_limit){
+            uint rec = withdraw(acc1,amount);
+            if(rec==0){
+                return false;
+            }
+            else{
+                rec = deposit(acc2, amount);
+                if(rec==0){
+                    deposit(acc1,amount);
+                    return false;
+                }
+                return true;
+            }
+        }
+    }
         
     
     
